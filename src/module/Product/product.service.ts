@@ -11,4 +11,7 @@ export const getAllProduct=async()=>{
     return result;
 };
 
-
+export const getSingleProduct=async(id:string)=>{
+    const result=await productModel.findOne({_id:new Object(id)});
+    return result;
+}
