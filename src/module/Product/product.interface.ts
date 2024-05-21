@@ -17,6 +17,13 @@ export type TProduct = {
   variants: TVariants[];
   inventory: TInventory;
 };
+
+export interface TOrder{
+  email:string,
+  productId:string,
+  price:number,
+  quantity:number,
+}
 // interface Variant {
 //     type: string;
 //     value: string;

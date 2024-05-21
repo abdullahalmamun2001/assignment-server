@@ -1,5 +1,5 @@
-import mongoose, { Schema, model } from "mongoose";
-import { TInventory, TProduct, TVariants } from "./product.interface";
+import mongoose, { Schema } from "mongoose";
+import { TOrder, TProduct} from "./product.interface";
 
 
 const productSchema = new Schema<TProduct>({
@@ -11,4 +11,12 @@ const productSchema = new Schema<TProduct>({
   variants: Array<{ type: String; value: String }>,
   inventory: { quantity: Number, inStock: Boolean },
 });
-export const productModel = model("product", productSchema);
+const OrderSchema=new Schema<TOrder>({
+  email: String,
+  productId: String,
+  price: Number,
+  quantity:Number,
+})
+
+export const productModel = mongoose.model("product", productSchema);
+export const OrderModel=mongoose.model('order',OrderSchema)
