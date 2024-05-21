@@ -1,5 +1,5 @@
 {
-  "name": "batch-3-apollo-flix-conceptual-session",
+  "name": "assignment-three",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/server.js",
@@ -14,11 +14,12 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.4.0",
     "slugify": "^1.6.6",
-    "date-fns": "^3.6.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
