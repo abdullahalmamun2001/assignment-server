@@ -5,10 +5,12 @@ import {
   deleteSingleProduct,
   getAllOrders,
   getAllProduct,
+  getSingleOrderByEmail,
   getSingleProduct,
   updateSingleProduct,
 } from "./product.service";
 import { TProduct } from "./product.interface";
+
 
 export const createProductController = async (req: Request, res: Response) => {
   try {
@@ -26,7 +28,8 @@ export const createProductController = async (req: Request, res: Response) => {
 
 export const getAllProductController = async (req: Request, res: Response) => {
   try {
-    const result = await getAllProduct();
+    const name=req.params.name;
+    const result = await getAllProduct(name);
     res.status(200).json({
       success: true,
       message: "Products fetched successfully!",
@@ -80,23 +83,24 @@ export const updateSingleProductController = async (
     type Name = {
       name: string;
     };
-    const product = req.body;
-    const id: string = product.id;
+    const {id}=req.params;
+    const query={_id:new Object(id)}
     const options = { upsert: true };
-    const updateDoc: TProduct = {
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      category: product.category,
-      tags: product.tag,
-      variants: product.variants,
-      inventory: product.inventory,
-    };
-    // const result = await updateSingleProduct(updateDoc);
+    // const updateDoc: TProduct = {
+    //   name: product.name,
+    //   description: product.description,
+    //   price: product.price,
+    //   category: product.category,
+    //   tags: product.tag,
+    //   variants: product.variants,
+    //   inventory: product.inventory,
+    // };
+    const updateDoc=req.body;
+    const result = await updateSingleProduct(query,updateDoc,options);
     res.status(200).json({
       success: true,
       message: "Product updated successfully!",
-      // data: result,
+      data: result,
     });
   } catch (err) {
     console.log(err);
@@ -133,6 +137,21 @@ export const getAllOrdersController=async(req:Request,res:Response)=>{
     res.status(200).json({
       success:true,
       message:"",
+      data:result,
+    })
+  }catch(err){
+    console.log(err);
+  }
+}
+
+
+export const getSingleOrderByEmailController=async(req:Request,res:Response)=>{
+  try{
+    const email=req.params.email;
+    const result=await getSingleOrderByEmail(email);
+    res.status(200).json({
+      success:true,
+      message:"Data fetch by email",
       data:result,
     })
   }catch(err){

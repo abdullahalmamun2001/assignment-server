@@ -1,23 +1,23 @@
 import { Router } from "express";
-import { createOrderController, createProductController, deleteSingleProductController, getAllOrdersController, getAllProductController, getSingleProductController } from "./product.controller";
+import { createOrderController, createProductController, deleteSingleProductController, getAllOrdersController, getAllProductController, getSingleOrderByEmailController, getSingleProductController, updateSingleProductController } from "./product.controller";
 import { updateSingleProduct } from "./product.service";
+import { emit } from "process";
 
 
 export const router=Router();
 // post api router 
 
 router.post('/order',createOrderController);
-router.post('/product',createProductController);
+router.post('/product/',createProductController);
 
-// get route for all product
-router.get('/product',getAllProductController);
-// router for get all order 
-router.get("/order",getAllOrdersController)
-// get route for single product 
+// get route
+router.get('/product?name',getAllProductController);
+router.get("/order",getAllOrdersController);
+router.get("/order/:email",getSingleOrderByEmailController)
 router.get('product/:productId',getSingleProductController);
 
 // delete route 
 router.delete("product/:prodID",deleteSingleProductController);
 
 // update route 
-// router.put('/:id',updateSingleProduct)
+router.put('/product/:id',updateSingleProductController)

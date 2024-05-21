@@ -43,3 +43,10 @@ export interface TOrder{
 //     variants: Variant[];
 //     inventory: Inventory;
 //   }
+
+export type TFilter={
+_id: Object;
+}
+export type TOption={
+upsert:boolean;
+}
