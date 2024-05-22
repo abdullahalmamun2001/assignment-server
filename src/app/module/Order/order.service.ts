@@ -3,6 +3,7 @@ import { OrderModel } from "./order.model";
 
 export const createOrder = async (data: TOrder) => {
     // console.log(data.productId);
+    
   
     const orderData=new OrderModel(data);
     // orderData.isUserExits

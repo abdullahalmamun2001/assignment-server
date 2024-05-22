@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import { OrderModel } from "./order.model";
 import { createOrder, getSingleOrderById } from "./order.service";
 import { OrderValidationWithZod } from "./order.validation";
-import { productModel } from "../Product/product.model";
-// import { productModel } from "../Product/product.model";
 
 export const createOrderController = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
     const zodParsedData = OrderValidationWithZod.parse(orderData);
+
+
     const result = await createOrder(zodParsedData);
     res.status(200).json({
       success: true,
