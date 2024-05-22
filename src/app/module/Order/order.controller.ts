@@ -12,7 +12,7 @@ export const createOrderController = async (req: Request, res: Response) => {
 
     const { productId, quantity } = orderData;
     const product = await productModel.findById(productId);
-    console.log(product);
+    // console.log(product);
 
     if (!product) {
       return res.status(404).json({
@@ -32,7 +32,11 @@ export const createOrderController = async (req: Request, res: Response) => {
       product.inventory.quantity = 0;
       product.inventory.inStock = false;
     }
-
+    if(product.inventory.quantity<quantity){
+      res.status(500).json({
+        message:"Sorry stock less than"
+      })
+    }
     await product.save();
 
     const result = await createOrder(zodParsedData);
@@ -50,7 +54,7 @@ export const createOrderController = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Order already exits",
+      message: "Something went wrong",
       error: err,
     });
   }
