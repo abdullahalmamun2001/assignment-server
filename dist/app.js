@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const product_route_1 = require("./module/Product/product.route");
-const order_route_1 = require("./module/Order/order.route");
+const product_route_1 = require("./app/module/Product/product.route");
+const order_route_1 = require("./app/module/Order/order.route");
 // import { router_two } from "./module/Order/order.route";
 const app = (0, express_1.default)();
 //parsers
