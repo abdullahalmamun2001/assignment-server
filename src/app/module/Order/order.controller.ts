@@ -2,17 +2,43 @@ import { Request, Response } from "express";
 import { OrderModel } from "./order.model";
 import { createOrder, getSingleOrderById } from "./order.service";
 import { OrderValidationWithZod } from "./order.validation";
+import { productModel } from "../Product/product.model";
 
 export const createOrderController = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
     const zodParsedData = OrderValidationWithZod.parse(orderData);
+    //
 
+    const { productId, quantity } = orderData;
+    const product = await productModel.findById(productId);
+    console.log(product);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found!",
+      });
+    }
+    if (product.inventory.quantity == 0) {
+      return res.status(500).json({
+        success: false,
+        message: "Insufficient quantity available in inventory",
+      });
+    }
+    product.inventory.quantity -= quantity;
+
+    if (product.inventory.quantity <= 0) {
+      product.inventory.quantity = 0;
+      product.inventory.inStock = false;
+    }
+
+    await product.save();
 
     const result = await createOrder(zodParsedData);
     res.status(200).json({
       success: true,
-      message: "successfully",
+      message: "Order Create successfully",
       data: result,
     });
 
