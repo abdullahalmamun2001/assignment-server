@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createOrderController, createProductController, deleteSingleProductController, getAllOrdersController, getAllProductController,getSingleProductController, updateSingleProductController } from "./product.controller";
+import { createOrderController, createProductController, deleteSingleProductController, getAllOrdersController, getAllProductController,getSingleOrderByIdController,getSingleProductController, updateSingleProductController } from "./product.controller";
 
 
 
@@ -14,6 +14,7 @@ router.post('/products/',createProductController);
 router.get('/products',getAllProductController);
 router.get('products/:productId',getSingleProductController);
 router.get("/orders",getAllOrdersController);
+router.get("/orders/:id",getSingleOrderByIdController);
 
 // delete route 
 router.delete("products/:prodID",deleteSingleProductController);

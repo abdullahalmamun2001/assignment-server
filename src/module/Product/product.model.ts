@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { TOrder, TProduct } from "./product.interface";
+import { TOrder, TOrderModel, TProduct, orderMethods } from "./product.interface";
 
 const productSchema = new Schema<TProduct>(
   {
@@ -13,7 +13,7 @@ const productSchema = new Schema<TProduct>(
   },
   { versionKey: false }
 );
-const OrderSchema = new Schema<TOrder>(
+const OrderSchema = new Schema<TOrder,TOrderModel,orderMethods>(
   {
     email: String,
     productId: String,
@@ -23,5 +23,11 @@ const OrderSchema = new Schema<TOrder>(
   { versionKey: false }
 );
 
-export const productModel = mongoose.model("product", productSchema);
-export const OrderModel = mongoose.model("order", OrderSchema);
+OrderSchema.methods.isUserExits=async function(id:string){
+  const isExistingOrder=await OrderModel.findOne({productId:id})
+  return isExistingOrder;
+}
+
+
+export const productModel = mongoose.model<TProduct>("product", productSchema);
+export const OrderModel = mongoose.model<TOrder,TOrderModel>("order", OrderSchema);

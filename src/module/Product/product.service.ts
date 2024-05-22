@@ -9,11 +9,24 @@ export const createProduct = async (data: TProduct) => {
 //   const result = await productModel.aggregate({ name: { $regex: name, $options: /i/ } });
 //   return result;
 // };
-export const getAllProduct = async () => {
-  const result = await productModel.find();
-  
-  return result;
-};
+// export const getAllProduct = async (searchTerm: string) => {
+//   const result=await productModel.find(searchTerm);
+// if(searchTerm){
+//   const result = await productModel.find({
+//     $or:{
+//       name:{$regex:searchTerm}
+//     }
+//     // name: { $regex: searchTerm  },
+
+//   });
+//   return result;
+// }else{
+//   const result=await productModel.find();
+//   return result;
+// }
+
+// return result;
+// };
 // export const getAllProductBySearch = async () => {
 //   const result = await productModel.createIndexes({$text: { $search: "dolor" }});
 //   return result;
@@ -38,13 +51,20 @@ export const updateSingleProduct = async (
 };
 
 export const createOrder = async (data: TOrder) => {
+  console.log(data.productId);
+
+  const orderData=new OrderModel(data);
+  // orderData.isUserExits
+  if(await orderData.isUserExits(data.productId)){
+    throw new Error("This Product is already exists");
+  }
   // const result=await OrderModel.aggregate([
   //   {
   //     $lookup: {
-  //       from: "products", 
-  //       localField: "productId", 
-  //       foreignField: "_id", 
-  //       as: "information" 
+  //       from: "products",
+  //       localField: "productId",
+  //       foreignField: "_id",
+  //       as: "information"
   //     }
   //   },
   // ])
@@ -52,11 +72,26 @@ export const createOrder = async (data: TOrder) => {
   return result;
 };
 
+export const getAllOrders = async (email: string) => {
+  const result = await OrderModel.find({ email: email });
+  return result;
+};
 // export const getAllOrders = async (email: string) => {
-//   const result = await OrderModel.find({ email: email });
+//   const result = await OrderModel.aggregate([
+//     { $match: { $eq: email } },
+//     {
+//       $lookup: {
+//         from: "products",
+//         localField: "productId",
+//         foreignField: "_id",
+//         as: "info",
+//       },
+//     },
+//   ]);
 //   return result;
 // };
-export const getAllOrders = async (email: string) => {
-  const result = await OrderModel.find({ email: { $eq: email } });
+
+export const getSingleOrderById = async (id: string) => {
+  const result = await OrderModel.find({ _id: id });
   return result;
 };

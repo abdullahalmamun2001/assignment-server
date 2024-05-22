@@ -4,11 +4,12 @@ import {
   createProduct,
   deleteSingleProduct,
   getAllOrders,
-  getAllProduct,
+  getSingleOrderById,
   getSingleProduct,
   updateSingleProduct,
 } from "./product.service";
-import { ProductValidationWithZod } from "./product.validation";
+import { OrderValidationWithZod, ProductValidationWithZod } from "./product.validation";
+import { OrderModel, productModel } from "./product.model";
 
 export const createProductController = async (req: Request, res: Response) => {
   try {
@@ -21,23 +22,50 @@ export const createProductController = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Sorry Product unsuccessFully",
+      error:err
+    })
   }
 };
 
 export const getAllProductController = async (req: Request, res: Response) => {
   try {
-    const searchTerm = req.query.searchTerm;
+    const searchTerm = req.query.searchTerm || "";
     console.log(searchTerm);
-    const result = await getAllProduct();
+    const query= searchTerm ? {name:{$regex:searchTerm,$options:"i"}}:{};
+    const allProduct=await productModel.find(query)
     res.status(200).json({
-      success: true,
-      message: "Products fetched successfully!",
-      da: result.length,
-      data: result,
-    });
+      success:true,
+      message:"fetch successfully",
+      length:allProduct.length,
+      data:allProduct,
+    })
+    // if(searchTerm){
+    //   const result = await getAllProduct(searchTerm as string);
+    //   res.status(200).json({
+    //     success: true,
+    //     message: "Products fetched successfully!",
+    //     da: result.length,
+    //     data: result,
+    //   });
+    // }else{
+      // const result = await getAllProduct();
+      // res.status(200).json({
+      //   success: true,
+      //   message: "Products fetched successfully!",
+      //   da: result.length,
+      //   data: result,
+      // });
+    // }
+   
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
   }
 };
 
@@ -80,9 +108,6 @@ export const updateSingleProductController = async (
   res: Response
 ) => {
   try {
-    type Name = {
-      name: string;
-    };
     const { id } = req.params;
     const query = { _id: new Object(id) };
     const options = { upsert: true };
@@ -109,65 +134,82 @@ export const updateSingleProductController = async (
 
 export const createOrderController = async (req: Request, res: Response) => {
   try {
-    //   const product = req.body;
-    //   const result = await createProduct(product);
-    //   res.status(200).json({
-    //     success: true,
-    //     message: "Product created successfully!",
-    //     data: result,
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
     const orderData = req.body;
-    const id=orderData.productId;
-    // if(id=="664ce5f260e4ffad0d58a246"){
-    //   console.log(true);
-    // }else{
-    //   console.log(false);
-    // }
+    const zodParsedData=OrderValidationWithZod.parse(orderData);
     const email=orderData.email;
     const quantity=orderData.quantity;
-    console.log(id,email,quantity);
-    const result = await createOrder(orderData);
-    // const result2=await getAllProduct()
+    const result = await createOrder(zodParsedData);
 
-    // const orderIDFromOrder=result.productId;
-    // const productCollection=await getAllProduct();
-    // productCollection.map(singleProduct=>{
-    //   const singleProductID=singleProduct._id;
-    //   console.log(singleProductID);
-
-    // }
-    // )
     res.status(200).json({
       success: true,
       message: "Orders fetched successfully!",
       data: result,
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err:any) {
+    res.status(500).json({
+      success: false,
+      message: "Order already exits",
+      error:err
+    })
   }
 };
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
   try {
-    const email = req.query.email;
-    const result = await getAllOrders(email as string);
-    if (!email) {
-      res.status(200).json({
-        success: true,
-        message: "Orders fetched successfully!",
-        data: result,
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        message: `Orders fetched successfully By email`,
-        data: result,
-      });
-    }
+    const lookupFromProduct=await OrderModel.aggregate([
+      {
+        $lookup:{
+          from:"products",
+          localField:"productId",
+          foreignField:"_id",
+          as:"info",
+        }
+      }
+    ])
+    res.status(200).json({
+      massage:"done",
+      data:lookupFromProduct
+    })
+
+
+
+    // const email = req.query.email;
+    // const result = await getAllOrders(email as string);
+    // if (!email) {
+    //   res.status(200).json({
+    //     success: true,
+    //     message: "Orders fetched successfully!",
+    //     data: result,
+    //   });
+    // } else {
+    //   res.status(200).json({
+    //     success: true,
+    //     message: `Orders fetched successfully By email`,
+    //     data: result,
+    //   });
+    // }
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
   }
 };
+
+export const getSingleOrderByIdController=async(req:Request,res:Response)=>{
+  // console.log(req,res);
+  try{
+    const id=req.params.id
+    console.log(id);
+    const result=await getSingleOrderById(id);
+    res.status(200).json({success:"not id found",d:result})
+    // res  
+  }catch(err){
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
+  }
+}

@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export type TVariants = {
   type: string;
   value: string;
@@ -18,12 +20,17 @@ export type TProduct = {
   inventory: TInventory;
 };
 
-export interface TOrder{
-  email:string,
-  productId:string,
-  price:number,
-  quantity:number,
+export interface TOrder {
+  email: string;
+  productId: string;
+  price: number;
+  quantity: number;
 }
+
+export type orderMethods = {
+  isUserExits(id: string): Promise<TOrder | null>;
+};
+export type TOrderModel = Model<TOrder, Record<string, never>, orderMethods>;
 // interface Variant {
 //     type: string;
 //     value: string;
@@ -44,9 +51,9 @@ export interface TOrder{
 //     inventory: Inventory;
 //   }
 
-export type TFilter={
-_id: Object;
-}
-export type TOption={
-upsert:boolean;
-}
+export type TFilter = {
+  _id: Object;
+};
+export type TOption = {
+  upsert: boolean;
+};

@@ -5,9 +5,17 @@ const app = express();
 
 //parsers
 app.use(express.json());
+// middleware \
+// app.use((req: any, res: any, next: any) => {
+//   res.status(404).json({
+//     success: false,
+//     message: "Route not found",
+//   });
+//   next();
+// });
 
-app.use('/api/',router);
 
+app.use("/api/", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello Next!");

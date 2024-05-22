@@ -18,3 +18,10 @@ export const ProductValidationWithZod = z.object({
     inStock: z.boolean(),
   }),
 });
+
+export const OrderValidationWithZod=z.object({
+        email:z.string(),
+        productId:z.string(),
+        price:z.number(),
+        quantity:z.number(),
+})
