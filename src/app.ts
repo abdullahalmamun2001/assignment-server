@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
-import { router } from "./module/Product/product.route";
+import { router } from "./app/module/Product/product.route";
+import { router_two } from "./app/module/Order/order.route";
+
 // import { router_two } from "./module/Order/order.route";
 const app = express();
 
@@ -15,10 +17,14 @@ app.use(express.json());
 // });
 
 
-app.use("/api/", router);
+app.use("/api/products", router);
+app.use("/api/orders", router_two);
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello Next!");
+  res.status(500).json({
+    success:false,
+    message:"Not Found Route"
+  })
 });
 
 export default app;

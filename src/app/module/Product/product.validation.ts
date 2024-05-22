@@ -19,9 +19,9 @@ export const ProductValidationWithZod = z.object({
   }),
 });
 
-export const OrderValidationWithZod=z.object({
-        email:z.string(),
-        productId:z.string(),
-        price:z.number(),
-        quantity:z.number(),
-})
+// export const OrderValidationWithZod=z.object({
+//         email:z.string(),
+//         productId:z.string(),
+//         price:z.number(),
+//         quantity:z.number(),
+// })
