@@ -8,7 +8,7 @@ const productSchema = new Schema<TProduct>(
     price: Number,
     category: String,
     tags: Array<string>,
-    variants: Array<{ type: String; value: String }>,
+    variants: Array<{ type: string; value: string }>,
     inventory: { quantity: Number, inStock: Boolean },
   },
   { versionKey: false }

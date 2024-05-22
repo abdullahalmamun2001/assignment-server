@@ -3,7 +3,6 @@ import {
   createOrder,
   createProduct,
   deleteSingleProduct,
-  getAllOrders,
   getSingleOrderById,
   getSingleProduct,
   updateSingleProduct,
@@ -33,7 +32,6 @@ export const createProductController = async (req: Request, res: Response) => {
 export const getAllProductController = async (req: Request, res: Response) => {
   try {
     const searchTerm = req.query.searchTerm || "";
-    console.log(searchTerm);
     const query= searchTerm ? {name:{$regex:searchTerm,$options:"i"}}:{};
     const allProduct=await productModel.find(query)
     res.status(200).json({
@@ -83,7 +81,11 @@ export const getSingleProductController = async (
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
   }
 };
 export const deleteSingleProductController = async (
@@ -99,7 +101,11 @@ export const deleteSingleProductController = async (
       data: result || null,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
   }
 };
 
@@ -128,7 +134,11 @@ export const updateSingleProductController = async (
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "Something Went Wrong",
+      error:err
+    })
   }
 };
 
@@ -136,8 +146,6 @@ export const createOrderController = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
     const zodParsedData=OrderValidationWithZod.parse(orderData);
-    const email=orderData.email;
-    const quantity=orderData.quantity;
     const result = await createOrder(zodParsedData);
 
     res.status(200).json({
@@ -171,23 +179,6 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
       data:lookupFromProduct
     })
 
-
-
-    // const email = req.query.email;
-    // const result = await getAllOrders(email as string);
-    // if (!email) {
-    //   res.status(200).json({
-    //     success: true,
-    //     message: "Orders fetched successfully!",
-    //     data: result,
-    //   });
-    // } else {
-    //   res.status(200).json({
-    //     success: true,
-    //     message: `Orders fetched successfully By email`,
-    //     data: result,
-    //   });
-    // }
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -198,7 +189,7 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
 };
 
 export const getSingleOrderByIdController=async(req:Request,res:Response)=>{
-  // console.log(req,res);
+
   try{
     const id=req.params.id
     console.log(id);

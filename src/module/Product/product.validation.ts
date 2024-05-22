@@ -1,4 +1,4 @@
-import { TVariants, TInventory, TProduct } from "./product.interface";
+
 import { z } from "zod";
 
 export const ProductValidationWithZod = z.object({
